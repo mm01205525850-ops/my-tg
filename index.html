@@ -76,11 +76,45 @@
 
       <div class="checkbox-row">
         <input type="checkbox" id="rules-check">
-        <label for="rules-check">Я прочитал <a href="#">правила</a> и принимаю условия сервиса</label>
+        <label for="rules-check">Я прочитал <a href="javascript:void(0)" onclick="showScreen('rules-screen')">правила</a> и принимаю условия сервиса</label>
       </div>
 
       <button class="action-btn" id="submit-order" onclick="submitOrder()">Создать заявку</button>
       <button class="secondary-btn" onclick="showScreen('main-screen')">Перейти на главный экран</button>
+    </div>
+  </div>
+
+  <!-- RULES SCREEN -->
+  <div id="rules-screen" class="screen">
+    <div class="screen-header">
+      <button class="back-btn" onclick="showScreen('exchange-screen')">←</button>
+      <h2>ПРАВИЛА</h2>
+    </div>
+    <div class="rules-content content-text" style="text-align: left;">
+      <h3>Покупка</h3>
+      <p>1. Покупка USDT осуществляется у лиц строго старше 18 лет.</p>
+      <p>2. Запрещено продавать USDT для третьих лиц.</p>
+      <p>3. При продаже при себе иметь паспорт.</p>
+      <p>4. При первой продаже необходимо пройти верификацию.</p>
+      
+      <h3 style="margin-top: 20px;">Продажа</h3>
+      <p>1. Покупка USDT осуществляется у лиц строго старше 18 лет.</p>
+      <p>2. Запрещено продавать USDT для третьих лиц.</p>
+      <p>3. При продаже при себе иметь паспорт.</p>
+      <p>4. При первой продаже необходимо пройти верификацию.</p>
+      
+      <hr style="margin: 20px 0; border: 0; border-top: 1px solid var(--border-color);">
+      
+      <p>• Минимальная сумма 300 USDT, платежи меньшей этой суммы обработаны не будут.</p>
+      <p>• Максимальная сумма 100 000 USDT, платежи больше этой суммы обработаны не будут.</p>
+      <p>• Сумма к выдаче в рублях рассчитывается по текущему курсу и округляется вниз до 100 ₽.</p>
+      <p>• При продаже проводится AML-проверка. Если средства её не пройдут, они будут возвращены на тот же кошелёк, с которого была отправка.</p>
+      <p>• Мы принимаем USDT, только в сети TRC-20.</p>
+      <p>• Будьте внимательны, мы не несем ответственности за USDT, отправленные не в сети блокчейна TRON.</p>
+      <p>• При зачислении USDT к нам на баланс будет произведён автоматический обмен по текущему курсу.</p>
+      <p>• Срок зачисления USDT в сети TRON занимает от 3 до 10 минут.</p>
+      
+      <button class="secondary-btn" onclick="showScreen('exchange-screen')" style="margin-top: 30px;">Вернуться к обмену</button>
     </div>
   </div>
 

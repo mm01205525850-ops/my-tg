@@ -144,6 +144,16 @@ h2 {
   background: rgba(255, 255, 255, 0.1);
 }
 
+.group-title {
+  font-size: 13px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  margin-top: 30px;
+  margin-bottom: 15px;
+  font-weight: 700;
+}
+
 .input-wrapper label {
   display: block;
   font-size: 11px;
@@ -222,6 +232,28 @@ h2 {
 }
 
 /* ORDER CARDS */
+.content-text {
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--text-white);
+  padding-bottom: 30px;
+  max-height: 75vh;
+  overflow-y: auto;
+}
+
+.content-text h3 {
+  font-size: 16px;
+  margin-bottom: 12px;
+  color: var(--text-white);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.content-text p {
+  margin-bottom: 12px;
+  opacity: 0.85;
+}
+
 #orders-container {
   display: flex;
   flex-direction: column;
