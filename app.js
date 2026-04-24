@@ -36,9 +36,14 @@ function openSupport() {
     tg.openTelegramLink('https://t.me/PitRix_Support'); 
 }
 
+function getOrdersKey() {
+    const userId = tg.initDataUnsafe?.user?.id || 'guest';
+    return `pitrix_orders_${userId}`;
+}
+
 function renderOrders() {
     const container = document.getElementById('orders-container');
-    const orders = JSON.parse(localStorage.getItem('pitrix_orders') || '[]');
+    const orders = JSON.parse(localStorage.getItem(getOrdersKey()) || '[]');
     
     if (orders.length === 0) {
         container.innerHTML = '<p class="empty-text">У вас пока нет активных заявок.</p>';
@@ -89,16 +94,18 @@ function submitOrder() {
         timestamp: new Date().toISOString()
     };
 
-    // Сохраняем локально, чтобы отобразить в "Все заявки"
-    const orders = JSON.parse(localStorage.getItem('pitrix_orders') || '[]');
+    // Сохраняем локально с привязкой к User ID
+    const orders = JSON.parse(localStorage.getItem(getOrdersKey()) || '[]');
     orders.unshift(orderData);
-    localStorage.setItem('pitrix_orders', JSON.stringify(orders.slice(0, 20))); // Храним последние 20
+    localStorage.setItem(getOrdersKey(), JSON.stringify(orders.slice(0, 20)));
 
-    // Отправляем данные боту (закроет приложение)
+    // Отправляем данные боту
     if (tg.sendData) {
+        // Добавляем уведомление, чтобы понять, что процесс пошел
+        alert('Заявка отправляется боту...'); 
         tg.sendData(JSON.stringify(orderData));
     } else {
-        alert('Заявка создана! (Debug mode)');
+        alert('Ошибка: Метод sendData недоступен. Убедитесь, что бот открыт через кнопку Reply Keyboard.');
         showScreen('main-screen');
     }
 }
