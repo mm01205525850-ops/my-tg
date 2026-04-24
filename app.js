@@ -10,12 +10,11 @@ const sellTab = document.getElementById('sell-tab');
 const modeHint = document.getElementById('mode-hint');
 const exchangeAmount = document.getElementById('exchange-amount');
 const walletContainer = document.getElementById('wallet-container');
-const submitBtn = document.getElementById('submit-order');
 
 function showScreen(screenId) {
     document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
     document.getElementById(screenId).classList.add('active');
-    tg.HapticFeedback.impactOccurred('light');
+    try { tg.HapticFeedback.impactOccurred('light'); } catch(e) {}
 }
 
 function setExchangeMode(mode) {
@@ -25,15 +24,12 @@ function setExchangeMode(mode) {
         sellTab.classList.remove('active');
         modeHint.innerText = 'Введите сумму в рублях';
         walletContainer.style.display = 'block';
-        submitBtn.innerText = 'Создать заявку';
     } else {
         sellTab.classList.add('active');
         buyTab.classList.remove('active');
         modeHint.innerText = 'Введите сумму в USDT';
-        walletContainer.style.display = 'none'; // Following screenshot 3 logic
-        submitBtn.innerText = 'Получить одноразовый кошелек';
+        walletContainer.style.display = 'none';
     }
-    tg.HapticFeedback.selectionChanged();
 }
 
 function openSupport() {
@@ -48,17 +44,22 @@ function submitOrder() {
     const wallet = document.getElementById('wallet-address').value;
     const rulesAccepted = document.getElementById('rules-check').checked;
 
-    if (!amount || !lastName || !firstName) {
-        tg.showAlert('Пожалуйста, заполните все обязательные поля (*)');
+    console.log("Submit clicked", { amount, lastName, firstName, rulesAccepted });
+
+    if (!amount) {
+        alert('Пожалуйста, введите сумму');
         return;
     }
-
+    if (!lastName || !firstName) {
+        alert('Пожалуйста, введите Фамилию и Имя');
+        return;
+    }
     if (!rulesAccepted) {
-        tg.showAlert('Пожалуйста, примите условия сервиса');
+        alert('Вы должны принять условия сервиса (поставить галочку)');
         return;
     }
 
-    tg.HapticFeedback.notificationOccurred('success');
+    try { tg.HapticFeedback.notificationOccurred('success'); } catch(e) {}
 
     const orderData = {
         action: 'exchange_order',
@@ -69,14 +70,18 @@ function submitOrder() {
         timestamp: new Date().toISOString()
     };
 
+    // Пытаемся отправить данные боту
     if (tg.sendData) {
         tg.sendData(JSON.stringify(orderData));
+        tg.close(); // Закрываем приложение после отправки
     } else {
-        tg.showAlert('Заявка создана! (В режиме превью данные не отправляются)');
+        alert('Заявка создана! Данные: ' + JSON.stringify(orderData));
         showScreen('main-screen');
     }
 }
 
 // Initial rates mock
-document.getElementById('buy-rate').innerText = '94.50 RUB';
-document.getElementById('sell-rate').innerText = '91.20 RUB';
+if(document.getElementById('buy-rate')) {
+    document.getElementById('buy-rate').innerText = '94.50 RUB';
+    document.getElementById('sell-rate').innerText = '91.20 RUB';
+}
