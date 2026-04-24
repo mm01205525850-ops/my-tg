@@ -50,16 +50,19 @@ function renderOrders() {
         return;
     }
 
-    container.innerHTML = orders.map(order => `
-        <div class="order-card">
-            <div class="order-header">
-                <strong>Заявка от ${new Date(order.timestamp).toLocaleDateString()}</strong>
-                <span class="status-badge">В обработке</span>
+    container.innerHTML = orders.map((order, index) => {
+        const orderNum = orders.length - index; // Чтобы новые заявки сверху имели большие номера
+        return `
+            <div class="order-card">
+                <div class="order-header">
+                    <strong>Заявка #${orderNum} от ${new Date(order.timestamp).toLocaleDateString()}</strong>
+                    <span class="status-badge">В обработке</span>
+                </div>
+                <p>Сумма: ${order.amount} ${order.mode === 'sell' ? 'USDT' : 'RUB'}</p>
+                <p>Тип: ${order.mode === 'sell' ? 'Продажа' : 'Покупка'}</p>
             </div>
-            <p>Сумма: ${order.amount} ${order.mode === 'sell' ? 'USDT' : 'RUB'}</p>
-            <p>Тип: ${order.mode === 'sell' ? 'Продажа' : 'Покупка'}</p>
-        </div>
-    `).join('');
+        `;
+    }).join('');
 }
 
 function submitOrder() {
