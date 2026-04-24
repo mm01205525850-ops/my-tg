@@ -99,13 +99,11 @@ function submitOrder() {
     orders.unshift(orderData);
     localStorage.setItem(getOrdersKey(), JSON.stringify(orders.slice(0, 20)));
 
-    // Отправляем данные боту
+    // Отправляем данные боту (закроет приложение)
     if (tg.sendData) {
-        // Добавляем уведомление, чтобы понять, что процесс пошел
-        alert('Заявка отправляется боту...'); 
         tg.sendData(JSON.stringify(orderData));
     } else {
-        alert('Ошибка: Метод sendData недоступен. Убедитесь, что бот открыт через кнопку Reply Keyboard.');
+        alert('Ошибка: Метод sendData недоступен. Убедитесь, что бот открыт через кнопку Reply Keyboard (кнопка внизу чата).');
         showScreen('main-screen');
     }
 }
