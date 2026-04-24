@@ -37,7 +37,7 @@ function setExchangeMode(mode) {
 }
 
 function openSupport() {
-    tg.openTelegramLink('https://t.me/Mosca67_Support'); // Mock support link from screenshots
+    tg.openTelegramLink('https://t.me/PitRix_Support'); 
 }
 
 function submitOrder() {
