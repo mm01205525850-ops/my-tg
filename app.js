@@ -36,6 +36,27 @@ function openSupport() {
     tg.openTelegramLink('https://t.me/PitRix_Support'); 
 }
 
+function renderOrders() {
+    const container = document.getElementById('orders-container');
+    const orders = JSON.parse(localStorage.getItem('pitrix_orders') || '[]');
+    
+    if (orders.length === 0) {
+        container.innerHTML = '<p class="empty-text">У вас пока нет активных заявок.</p>';
+        return;
+    }
+
+    container.innerHTML = orders.map(order => `
+        <div class="order-card">
+            <div class="order-header">
+                <strong>Заявка от ${new Date(order.timestamp).toLocaleDateString()}</strong>
+                <span class="status-badge">В обработке</span>
+            </div>
+            <p>Сумма: ${order.amount} ${order.mode === 'sell' ? 'USDT' : 'RUB'}</p>
+            <p>Тип: ${order.mode === 'sell' ? 'Продажа' : 'Покупка'}</p>
+        </div>
+    `).join('');
+}
+
 function submitOrder() {
     const amount = exchangeAmount.value;
     const lastName = document.getElementById('last-name').value;
@@ -43,8 +64,6 @@ function submitOrder() {
     const middleName = document.getElementById('middle-name').value;
     const wallet = document.getElementById('wallet-address').value;
     const rulesAccepted = document.getElementById('rules-check').checked;
-
-    console.log("Submit clicked", { amount, lastName, firstName, rulesAccepted });
 
     if (!amount) {
         alert('Пожалуйста, введите сумму');
@@ -70,15 +89,28 @@ function submitOrder() {
         timestamp: new Date().toISOString()
     };
 
-    // Пытаемся отправить данные боту
+    // Сохраняем локально, чтобы отобразить в "Все заявки"
+    const orders = JSON.parse(localStorage.getItem('pitrix_orders') || '[]');
+    orders.unshift(orderData);
+    localStorage.setItem('pitrix_orders', JSON.stringify(orders.slice(0, 20))); // Храним последние 20
+
+    // Отправляем данные боту (закроет приложение)
     if (tg.sendData) {
         tg.sendData(JSON.stringify(orderData));
-        tg.close(); // Закрываем приложение после отправки
     } else {
-        alert('Заявка создана! Данные: ' + JSON.stringify(orderData));
+        alert('Заявка создана! (Debug mode)');
         showScreen('main-screen');
     }
 }
+
+// Загрузка при открытии экрана заявок
+const originalShowScreen = showScreen;
+window.showScreen = function(screenId) {
+    if (screenId === 'orders-screen') {
+        renderOrders();
+    }
+    originalShowScreen(screenId);
+};
 
 // Initial rates mock
 if(document.getElementById('buy-rate')) {
