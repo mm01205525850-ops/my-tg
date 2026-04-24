@@ -1,11 +1,8 @@
 :root {
-  --bg-top: #000000;
-  --bg-bottom: #0a0a0a;
-  --gold-primary: #D4AF37; /* Classic Gold */
-  --gold-gradient: linear-gradient(135deg, #fceabb 0%, #fccd4d 50%, #f8b500 51%, #fbdf93 100%);
-  --btn-border: #3d3311;
+  --bg-top: #0f1414;
+  --bg-bottom: #050505;
   --text-white: #ffffff;
-  --text-muted: #8e8e8e;
+  --text-muted: rgba(255, 255, 255, 0.6);
   --font-main: 'Inter', sans-serif;
   --font-logo: 'Playfair Display', serif;
 }
@@ -18,11 +15,12 @@
 }
 
 body {
-  background: radial-gradient(circle at top, #1a1508 0%, #000000 100%);
+  background: linear-gradient(180deg, var(--bg-top) 0%, var(--bg-bottom) 100%);
   color: var(--text-white);
   font-family: var(--font-main);
   min-height: 100vh;
   padding: 20px;
+  overflow-x: hidden;
 }
 
 /* SCREENS */
@@ -43,60 +41,61 @@ body {
 /* LOGO SECTION */
 .logo-container {
   text-align: center;
-  margin-top: 40px;
-  margin-bottom: 50px;
+  margin-top: 50px;
+  margin-bottom: 60px;
 }
 
 .main-logo {
   font-family: var(--font-logo);
-  font-size: 58px;
-  letter-spacing: 6px;
-  margin-bottom: -5px;
-  color: var(--gold-primary);
-  text-shadow: 0 0 15px rgba(212, 175, 55, 0.3);
+  font-size: 64px;
+  letter-spacing: 12px;
+  margin-bottom: 5px;
+  color: var(--text-white);
+  text-transform: uppercase;
 }
 
 .logo-subtitle {
-  font-size: 12px;
-  letter-spacing: 4px;
-  font-weight: 400;
-  color: var(--gold-primary);
-  opacity: 0.8;
+  font-size: 13px;
+  letter-spacing: 2.5px;
+  font-weight: 700;
+  color: var(--text-white);
+  opacity: 0.9;
   text-transform: uppercase;
 }
 
 /* MENU GRID */
 .menu-grid {
-  display: grid;
-  gap: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 0 10px;
 }
 
 .menu-btn {
-  background: rgba(212, 175, 55, 0.05);
-  border: 1px solid var(--btn-border);
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   color: var(--text-white);
-  padding: 20px;
-  border-radius: 8px;
-  font-size: 15px;
+  padding: 18px 20px;
+  border-radius: 12px;
+  font-size: 17px;
   cursor: pointer;
-  transition: all 0.3s;
-  text-transform: uppercase;
-  letter-spacing: 1px;
+  transition: all 0.2s;
+  text-transform: none; /* Убираем капс как на скриншоте */
+  letter-spacing: 0.5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .menu-btn:active {
-  background: rgba(212, 175, 55, 0.2);
-  border-color: var(--gold-primary);
-}
-
-.wide {
-  grid-column: span 2;
+  background: rgba(255, 255, 255, 0.1);
+  transform: scale(0.98);
 }
 
 .two-cols {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 15px;
+  gap: 12px;
 }
 
 /* FORMS & SCREENS */
