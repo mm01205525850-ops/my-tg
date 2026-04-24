@@ -209,18 +209,48 @@ h2 {
 }
 
 /* CHECKBOX */
-.checkbox-container {
+.checkbox-row {
   display: flex;
   align-items: center;
-  gap: 10px;
-  font-size: 14px;
-  color: var(--text-muted);
-  margin-bottom: 20px;
+  gap: 12px;
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.8);
+  margin-bottom: 25px;
+  cursor: pointer;
 }
 
-.checkbox-container a {
+/* Стилизация под круглый чекбокс из скриншота */
+.checkbox-row input[type="checkbox"] {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border: 1.5px solid rgba(255, 255, 255, 0.8);
+  border-radius: 50%;
+  outline: none;
+  cursor: pointer;
+  position: relative;
+  background: transparent;
+}
+
+.checkbox-row input[type="checkbox"]:checked {
+  background: white;
+  border-color: white;
+}
+
+.checkbox-row input[type="checkbox"]:checked::after {
+  content: "✔";
+  position: absolute;
+  color: #000;
+  font-size: 11px;
+  left: 4px;
+  top: 1px;
+}
+
+.checkbox-row a {
   color: var(--text-white);
   text-decoration: underline;
+  text-underline-offset: 3px;
 }
 
 /* RATES SCREEN */
