@@ -70,6 +70,7 @@ function submitOrder() {
     const lastName = document.getElementById('last-name').value;
     const firstName = document.getElementById('first-name').value;
     const middleName = document.getElementById('middle-name').value;
+    const tgContact = document.getElementById('tg-contact').value;
     const wallet = document.getElementById('wallet-address').value;
     const rulesAccepted = document.getElementById('rules-check').checked;
 
@@ -79,6 +80,10 @@ function submitOrder() {
     }
     if (!lastName || !firstName) {
         alert('Пожалуйста, введите Фамилию и Имя');
+        return;
+    }
+    if (!tgContact || !tgContact.startsWith('@')) {
+        alert('Пожалуйста, введите ваш Telegram через @ (например, @username)');
         return;
     }
     if (!rulesAccepted) {
@@ -93,6 +98,7 @@ function submitOrder() {
         mode: currentMode,
         amount: amount,
         customer: `${lastName} ${firstName} ${middleName}`,
+        contact: tgContact,
         wallet: currentMode === 'buy' ? wallet : 'one-time requested',
         timestamp: new Date().toISOString()
     };
