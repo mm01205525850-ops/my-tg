@@ -117,14 +117,41 @@ function submitOrder() {
     }
 }
 
-// Загрузка при открытии экрана заявок
-const originalShowScreen = showScreen;
+// Загрузка при открытии экранов
 window.showScreen = function(screenId) {
     if (screenId === 'orders-screen') {
         renderOrders();
     }
-    originalShowScreen(screenId);
+    
+    if (screenId === 'referral-screen') {
+        const userId = tg.initDataUnsafe?.user?.id || '0';
+        // Укажите здесь юзернейм вашего бота без @
+        const botUsername = 'crypto_nn_bot'; 
+        const refLink = `https://t.me/${botUsername}?start=${userId}`;
+        const refLinkElement = document.getElementById('ref-link');
+        if (refLinkElement) {
+            refLinkElement.innerText = refLink;
+        }
+    }
+    
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.getElementById(screenId).classList.add('active');
+    try { tg.HapticFeedback.impactOccurred('light'); } catch(e) {}
 };
+
+function copyRefLink() {
+    const link = document.getElementById('ref-link').innerText;
+    navigator.clipboard.writeText(link).then(() => {
+        alert('Ссылка скопирована!');
+    });
+}
+
+function shareRefLink() {
+    const link = document.getElementById('ref-link').innerText;
+    const text = "Присоединяйся к PitRix — лучшему обменнику криптовалюты!";
+    const shareUrl = `https://t.me/share/url?url=${encodeURIComponent(link)}&text=${encodeURIComponent(text)}`;
+    tg.openTelegramLink(shareUrl);
+}
 
 // Initial rates mock
 if(document.getElementById('buy-rate')) {

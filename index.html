@@ -207,16 +207,29 @@
     </div>
   </div>
 
-  <!-- REFERRAL SCREEN (simple one) -->
+  <!-- REFERRAL SCREEN -->
   <div id="referral-screen" class="screen">
     <div class="screen-header">
       <button class="back-btn" onclick="showScreen('main-screen')">←</button>
       <h2>РЕФЕРАЛЬНАЯ ПРОГРАММА</h2>
     </div>
-    <div class="content-text">
-      <p>Зарабатывайте 10% от нашей комиссии с каждого обмена вашего друга.</p>
-      <p>Ваша ссылка: <code id="ref-link">t.me/your_bot?start=123</code></p>
-      <button class="secondary-btn" onclick="showScreen('main-screen')">Перейти на главный экран</button>
+    <div class="content-text" style="text-align: center;">
+      <div style="font-size: 50px; margin-bottom: 20px;">🤝</div>
+      <p style="font-size: 16px; margin-bottom: 20px; color: #fff;">Приглашайте друзей и получайте вознаграждение с каждого их обмена!</p>
+      
+      <div style="background: rgba(255,255,255,0.05); padding: 20px; border-radius: 12px; margin-bottom: 20px; border: 1px dashed rgba(255,255,255,0.2);">
+        <p style="font-size: 11px; color: var(--text-muted); text-transform: uppercase; margin-bottom: 10px;">Ваша ссылка для приглашения:</p>
+        <code id="ref-link" style="word-break: break-all; color: var(--text-white); font-size: 14px;">Генерация...</code>
+      </div>
+
+      <button class="action-btn" onclick="shareRefLink()" style="margin-bottom: 12px;">Пригласить друга</button>
+      <button class="secondary-btn" onclick="copyRefLink()" style="margin-bottom: 20px;">Копировать ссылку</button>
+      
+      <div style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 10px; font-size: 13px; color: var(--text-muted);">
+        <p>Вы будете получать 10% от нашей прибыли с каждой сделки приглашенного вами пользователя.</p>
+      </div>
+
+      <button class="secondary-btn" onclick="showScreen('main-screen')" style="margin-top: 30px;">Вернуться назад</button>
     </div>
   </div>
 
