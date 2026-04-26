@@ -163,8 +163,30 @@ function shareRefLink() {
     tg.openTelegramLink(shareUrl);
 }
 
-// Initial rates mock
-if(document.getElementById('buy-rate')) {
-    document.getElementById('buy-rate').innerText = '94.50 RUB';
-    document.getElementById('sell-rate').innerText = '91.20 RUB';
+async function updateRates() {
+    try {
+        // Используем публичный API CoinGecko для получения курса USDT к RUB
+        const response = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=tether&vs_currencies=rub');
+        const data = await response.json();
+        const baseRate = data.tether.rub;
+
+        // Настраиваем спред (разницу) для покупки и продажи
+        // Например: покупка на 2% дороже, продажа на 2% дешевле от биржи
+        const buyRate = (baseRate * 1.02).toFixed(2);
+        const sellRate = (baseRate * 0.98).toFixed(2);
+
+        const buyElem = document.getElementById('buy-rate');
+        const sellElem = document.getElementById('sell-rate');
+        
+        if (buyElem) buyElem.innerText = `${buyRate} RUB`;
+        if (sellElem) sellElem.innerText = `${sellRate} RUB`;
+        
+        console.log('Курсы обновлены:', { buyRate, sellRate });
+    } catch (error) {
+        console.error('Ошибка при получении курса:', error);
+    }
 }
+
+// Обновляем курсы при загрузке и каждые 60 секунд
+updateRates();
+setInterval(updateRates, 60000);
