@@ -220,3 +220,29 @@ async function updateRates() {
 // Обновляем курсы при загрузке и каждые 60 секунд
 updateRates();
 setInterval(updateRates, 60000);
+
+// Инициализация анимированного фона
+function initParticles() {
+    const container = document.getElementById('bg-particles');
+    if (!container) return;
+
+    for (let i = 0; i < 12; i++) {
+        const particle = document.createElement('div');
+        particle.className = 'usdt-particle';
+        
+        // Случайные позиции и задержки анимации
+        particle.style.left = Math.random() * 100 + 'vw';
+        particle.style.top = Math.random() * 100 + 'vh';
+        particle.style.animationDuration = (Math.random() * 20 + 15) + 's';
+        particle.style.animationDelay = (Math.random() * -20) + 's';
+        
+        // Случайный размер для эффекта глубины
+        const size = Math.random() * 40 + 30;
+        particle.style.width = size + 'px';
+        particle.style.height = size + 'px';
+        
+        container.appendChild(particle);
+    }
+}
+
+initParticles();
