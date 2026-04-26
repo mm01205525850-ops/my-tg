@@ -31,33 +31,59 @@ function openSupport() {
     tg.openTelegramLink('https://t.me/PitRix_Support'); 
 }
 
+// Укажите здесь ваш домен после настройки Nginx (например, https://pitrix-change.ru)
+const SERVER_URL = 'https://ваш-домен.ru';
+
 function getOrdersKey() {
     const userId = tg.initDataUnsafe?.user?.id || 'guest';
     return `pitrix_orders_${userId}`;
 }
 
-function renderOrders() {
+async function renderOrders() {
     const container = document.getElementById('orders-container');
-    const orders = JSON.parse(localStorage.getItem(getOrdersKey()) || '[]');
-    
-    if (orders.length === 0) {
-        container.innerHTML = '<p class="empty-text">У вас пока нет активных заявок.</p>';
+    const userId = tg.initDataUnsafe?.user?.id;
+
+    if (!userId) {
+        container.innerHTML = '<p class="empty-text">Ошибка авторизации Telegram.</p>';
         return;
     }
 
-    container.innerHTML = orders.map((order, index) => {
-        const orderNum = orders.length - index; // Чтобы новые заявки сверху имели большие номера
-        return `
-            <div class="order-card">
-                <div class="order-header">
-                    <strong>Заявка #${orderNum} от ${new Date(order.timestamp).toLocaleDateString()}</strong>
-                    <span class="status-badge">В обработке</span>
+    container.innerHTML = '<p class="empty-text">Загрузка истории...</p>';
+
+    try {
+        // Делаем запрос к нашему API на сервере
+        const response = await fetch(`${SERVER_URL}/api/orders?user_id=${userId}`);
+        const orders = await response.json();
+
+        if (!orders || orders.length === 0) {
+            container.innerHTML = '<p class="empty-text">У вас пока нет активных заявок.</p>';
+            return;
+        }
+
+        container.innerHTML = orders.map((order) => {
+            const date = new Date(order.timestamp).toLocaleDateString();
+            const status = order.status || 'в обработке';
+            let statusClass = 'status-processing';
+            
+            if (status === 'выполнена') statusClass = 'status-done';
+            if (status === 'отклонена') statusClass = 'status-rejected';
+
+            return `
+                <div class="order-card">
+                    <div class="order-header">
+                        <strong>Заявка #${order.order_id} от ${date}</strong>
+                        <span class="status-badge ${statusClass}">${status.toUpperCase()}</span>
+                    </div>
+                    <p>Сумма: ${order.data.amount} ${order.data.mode === 'sell' ? 'USDT' : 'RUB'}</p>
+                    <p>Тип: ${order.data.mode === 'sell' ? 'Продажа' : 'Покупка'}</p>
+                    ${order.referrer !== 'нет' ? `<p style="font-size: 10px; color: #aaa;">🤝 Реферал</p>` : ''}
                 </div>
-                <p>Сумма: ${order.amount} ${order.mode === 'sell' ? 'USDT' : 'RUB'}</p>
-                <p>Тип: ${order.mode === 'sell' ? 'Продажа' : 'Покупка'}</p>
-            </div>
-        `;
-    }).join('');
+            `;
+        }).join('');
+    } catch (error) {
+        console.error('Ошибка загрузки заявок:', error);
+        container.innerHTML = '<p class="empty-text" style="color: #ff4d4d;">Не удалось загрузить данные с сервера. Проверьте соединение.</p>';
+    }
 }
 
 function submitOrder() {
@@ -79,6 +105,10 @@ function submitOrder() {
     }
     if (!tgContact || !tgContact.startsWith('@')) {
         alert('Пожалуйста, введите ваш Telegram через @ (например, @username)');
+        return;
+    }
+    if (currentMode === 'buy' && (!wallet || wallet.length !== 34)) {
+        alert('Пожалуйста, введите корректный адрес кошелька TRC-20 (ровно 34 символа)');
         return;
     }
     if (!rulesAccepted) {
