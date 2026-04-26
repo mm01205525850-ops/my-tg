@@ -11,11 +11,6 @@ const modeHint = document.getElementById('mode-hint');
 const exchangeAmount = document.getElementById('exchange-amount');
 const walletContainer = document.getElementById('wallet-container');
 
-function showScreen(screenId) {
-    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-    document.getElementById(screenId).classList.add('active');
-    try { tg.HapticFeedback.impactOccurred('light'); } catch(e) {}
-}
 
 function setExchangeMode(mode) {
     currentMode = mode;
@@ -117,27 +112,42 @@ function submitOrder() {
     }
 }
 
-// Загрузка при открытии экранов
-window.showScreen = function(screenId) {
+function showScreen(screenId) {
+    // Особая логика для разделов, требующих обновления данных
     if (screenId === 'orders-screen') {
         renderOrders();
     }
     
     if (screenId === 'referral-screen') {
-        const userId = tg.initDataUnsafe?.user?.id || '0';
-        // Укажите здесь юзернейм вашего бота без @
+        const user = tg.initDataUnsafe?.user;
+        const userId = user ? user.id : null;
+        
         const botUsername = 'crypto_nn_bot'; 
-        const refLink = `https://t.me/${botUsername}?start=${userId}`;
         const refLinkElement = document.getElementById('ref-link');
-        if (refLinkElement) {
-            refLinkElement.innerText = refLink;
+        
+        if (userId) {
+            const refLink = `https://t.me/${botUsername}?start=${userId}`;
+            if (refLinkElement) refLinkElement.innerText = refLink;
+        } else {
+            if (refLinkElement) {
+                refLinkElement.innerHTML = '<span style="color: #ff4d4d;">Ошибка: Откройте приложение через кнопку в боте</span>';
+            }
         }
     }
     
+    // Само переключение экранов
     document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-    document.getElementById(screenId).classList.add('active');
+    const targetScreen = document.getElementById(screenId);
+    if (targetScreen) {
+        targetScreen.classList.add('active');
+    }
+    
+    // Виброотклик
     try { tg.HapticFeedback.impactOccurred('light'); } catch(e) {}
-};
+}
+
+// Привязываем к window для надежности
+window.showScreen = showScreen;
 
 function copyRefLink() {
     const link = document.getElementById('ref-link').innerText;
